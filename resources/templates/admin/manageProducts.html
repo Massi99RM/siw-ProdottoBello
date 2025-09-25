@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProdottoBello - Gestione Prodotti</title>
-    <link rel="stylesheet" th:href="@{/stile.css}">
+    <link rel="stylesheet" th:href="@{/css/stile.css}">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <a href="/">Home</a> | 
         <a href="/catalog">Catalogo</a> | 
         <span sec:authorize="isAuthenticated()">
@@ -24,7 +24,7 @@
         </span>
     </header>
 
-    <main>
+    <main class="site-main">
         <div class="admin-container">
             <h1>Gestione Prodotti</h1>
             
@@ -99,6 +99,25 @@
                                       placeholder="Inserisci la descrizione del prodotto"
                                       class="form-textarea"></textarea>
                         </div>
+						
+						<div class="form-group">
+						    <label for="imageUrl">URL Immagine:</label>
+						    <input type="url"
+						           id="imageUrl"
+						           th:field="*{imageUrl}"
+						           placeholder="https://...jpg"
+						           class="form-input">
+						</div>
+
+						<div class="form-group">
+						    <label for="buyLink">Link Acquisto:</label>
+						    <input type="url"
+						           id="buyLink"
+						           th:field="*{buyLink}"
+						           placeholder="https://..."
+						           class="form-input">
+						</div>
+
                         
                         <div class="form-group">
                             <label>Prodotti Simili:</label>
@@ -135,34 +154,42 @@
 
             <!-- Lista Prodotti Esistenti -->
             <div class="admin-section">
-                <h2>Prodotti Esistenti (Totale: <span th:text="${#lists.size(products)}">0</span>)</h2>
                 
                 <div th:if="${products != null and !products.empty}" class="products-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Nome</th>
                                 <th>Categoria</th>
                                 <th>Prezzo</th>
                                 <th>Descrizione</th>
                                 <th>Prodotti Simili</th>
+								<th>Immagine</th>
+								<th>Link</th>
                                 <th>Azioni</th>
+								
+
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="product : ${products}">
-                                <td th:text="${product.id}">#1</td>
                                 <td th:text="${product.name}">Nome Prodotto</td>
                                 <td>
                                     <span class="category-badge" th:text="${product.type}">BOOKS</span>
                                 </td>
                                 <td class="price-cell" th:text="'€ ' + ${product.price}">€ 29.90</td>
                                 <td class="description-cell" th:text="${#strings.abbreviate(product.description, 50)}">Descrizione...</td>
-                                <td class="similar-cell">
-                                    <span th:if="${product.similarProducts.empty}">Nessuno</span>
-                                    <span th:if="${!product.similarProducts.empty}" th:text="${#lists.size(product.similarProducts)} + ' prodotti'">2 prodotti</span>
-                                </td>
+								
+								<td class="similar-cell">
+								<span th:if="${product.similarProducts.empty}">Nessuno</span>
+								<span th:if="${!product.similarProducts.empty}" th:text="${#lists.size(product.similarProducts)} + ' prodotti'">2 prodotti</span>
+								</td>
+								<td>
+								    <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" alt="Immagine" style="max-width: 60px; max-height: 60px;">
+								</td>
+								<td>
+								    <a th:if="${product.buyLink}" th:href="${product.buyLink}" target="_blank">Vai</a>
+								</td>
                                 <td class="actions-cell">
                                     <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" 
                                        class="btn-edit">Modifica</a>
@@ -178,7 +205,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+				<h2>Prodotti Esistenti (Totale: <span th:text="${#lists.size(products)}">0</span>)</h2>
                 <div th:if="${products == null or products.empty}" class="no-products-admin">
                     <p>Nessun prodotto presente nel catalogo.</p>
                     <p>Usa il form sopra per aggiungere il primo prodotto.</p>

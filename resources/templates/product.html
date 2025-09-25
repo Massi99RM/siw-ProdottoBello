@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'ProdottoBello - ' + ${product?.name ?: 'Prodotto'}">ProdottoBello - Prodotto</title>
-    <link rel="stylesheet" th:href="@{/stile.css}">
+    <link rel="stylesheet" th:href="@{/css/stile.css}">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <a href="/">Home</a> | 
         <a href="/catalog">Catalogo</a> | 
         <span th:if="${#authorization.expression('isAuthenticated()')}">
@@ -23,7 +23,7 @@
         </span>
     </header>
 
-    <main>
+    <main class="site-main">
         <div class="breadcrumb">
             <a href="/">Home</a> &gt; 
             <span th:text="${product?.type ?: 'Categoria'}">Categoria</span> &gt; 
@@ -44,6 +44,7 @@
                         <span class="price-label">Prezzo:</span>
                         <span class="price-value" th:text="'€ ' + ${product.price}">€: 29.90</span>
                     </div>
+
                     
                     <div class="product-description">
                         <h3>Descrizione</h3>
@@ -51,6 +52,15 @@
                     </div>
                 </div>
             </div>
+			
+			<div class="product-image" th:if="${product.imageUrl}">
+			    <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-main-image">
+			</div>
+
+			<div class="buy-section" th:if="${product.buyLink}">
+			    <a th:href="${product.buyLink}" target="_blank" class="btn-buy">Acquista ora</a>
+			</div>
+
             
             <div class="product-comments">
                 <h3>Recensioni</h3>

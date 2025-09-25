@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProdottoBello - Il Mio Profilo</title>
-    <link rel="stylesheet" th:href="@{/stile.css}">
+    <link rel="stylesheet" th:href="@{/css/stile.css}">
 </head>
 <body>
-	<header>
+	<header class="site-header">
 		    <a href="/">Home</a> | 
 		    <a href="/catalog">Catalogo</a> | 
 		    <span th:if="${#authorization.expression('isAuthenticated()')}">
@@ -24,7 +24,7 @@
 		    </span>
 		</header>
 
-    <main>
+    <main class="site-main">
         <div class="profile-container">
             <h1>Il Mio Profilo</h1>   
             <!-- Informazioni utente -->
@@ -57,7 +57,7 @@
 					    <h2>Pannello Amministrazione</h2>
 					    <div class="admin-actions">
 					        <a href="/admin/products" class="btn-primary">Gestisci Prodotti</a>
-					        <a href="/admin/dashboard" class="btn-secondary">Dashboard Admin</a>
+					        <a href="/admin/dashboard" class="btn-primary">Dashboard Admin</a>
 					    </div>
 					</div>
                     <div class="info-item" th:if="${user.lastLogin}">

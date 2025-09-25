@@ -8,53 +8,72 @@ import java.util.Set;
 @Entity
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    private String name;
+	private String name;
 
-    private BigDecimal price;
+	private BigDecimal price;
 
-    @Column(length = 2000)
-    private String description;
+	@Column(length = 2000)
+	private String description;
+	
+	@Column(name = "image_url", length = 2048)
+	private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    private ProductType type;
+	@Column(name = "buy_link", length = 2048)
+	private String buyLink;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "product_similar",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "similar_id")
-    )
-    private Set<Product> similarProducts = new HashSet<>();
+	@Enumerated(EnumType.STRING)
+	private ProductType type;
 
-    // Costruttori
-    public Product() {}
-    public Product(String name, BigDecimal price, String description, ProductType type) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.type = type;
-    }
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "product_similar",
+			joinColumns = @JoinColumn(name = "product_id"),
+			inverseJoinColumns = @JoinColumn(name = "similar_id")
+			)
+	private Set<Product> similarProducts = new HashSet<>();
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+	// Costruttori
+	public Product() {}
+	public Product(String name, BigDecimal price, String description, ProductType type) {
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.type = type;
+	}
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+	// Getters & Setters
+	public Long getId() { return id; }
+	public void setId(Long id) { this.id = id; }
 
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+	public BigDecimal getPrice() { return price; }
+	public void setPrice(BigDecimal price) { this.price = price; }
 
-    public ProductType getType() { return type; }
-    public void setType(ProductType type) { this.type = type; }
+	public String getDescription() { return description; }
+	public void setDescription(String description) { this.description = description; }
 
-    public Set<Product> getSimilarProducts() { return similarProducts; }
-    public void setSimilarProducts(Set<Product> similarProducts) { this.similarProducts = similarProducts; }
+	public ProductType getType() { return type; }
+	public void setType(ProductType type) { this.type = type; }
+
+	public Set<Product> getSimilarProducts() { return similarProducts; }
+	public void setSimilarProducts(Set<Product> similarProducts) { this.similarProducts = similarProducts; }
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getBuyLink() {
+		return buyLink;
+	}
+	public void setBuyLink(String buyLink) {
+		this.buyLink = buyLink;
+	}
+
 }

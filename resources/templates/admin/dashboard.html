@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProdottoBello - Dashboard Admin</title>
-    <link rel="stylesheet" th:href="@{/stile.css}">
+    <link rel="stylesheet" th:href="@{/css/stile.css}">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <a href="/">Home</a> | 
         <a href="/catalog">Catalogo</a> | 
         <span sec:authorize="isAuthenticated()">
@@ -24,7 +24,7 @@
         </span>
     </header>
 
-    <main>
+    <main class="site-main">
         <div class="admin-container">
             <h1>Dashboard Amministratore</h1>
             

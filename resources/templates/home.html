@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProdottoBello - Home</title>
-    <link rel="stylesheet" th:href="@{/stile.css}">
+    <link rel="stylesheet" th:href="@{/css/stile.css}">
 </head>
 <body>
 	<header>
@@ -23,10 +23,16 @@
 	    </span>
 	</header>
 
-    <main>
-        <h1>Benvenuto su ProdottoBello</h1>
-        <p>Scopri i nostri prodotti selezionati per te!</p>
+    <!-- Sezione Hero -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Benvenuto su ProdottoBello</h1>
+            <p class="hero-subtitle">Scopri prodotti unici e di qualità selezionati appositamente per te!</p>
+            <a href="/catalog" class="btn-base btn-primary hero-cta">Scopri il Catalogo</a>
+        </div>
+    </section>
 
+    <main>
         <div class="products-grid" th:if="${products != null and !products.empty}">
             <h2>I nostri prodotti</h2>
             <div class="product-list">
