@@ -1,0 +1,42 @@
+# === Java general ===
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# === Maven/Gradle build ===
+/target/
+/build/
+
+# === Eclipse / STS ===
+.classpath
+.project
+.settings/
+.springBeans
+.apt_generated
+.factorypath
+.metadata
+bin/
+BOOT-INF/
+MANIFEST.MF
+
+# === IntelliJ (nel caso apri anche lì il progetto) ===
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# === OS specific ===
+.DS_Store
+Thumbs.db
+
+# === Logs & temp ===
+*.log
+*.tmp
+*.swp
+
+# === Application specific (se usi db embedded ecc.) ===
+/h2-db/
+/*.db
