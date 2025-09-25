@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdottoBello - Registrazione</title>
+    <link rel="stylesheet" th:href="@{/stile.css}">
+</head>
+<body>
+	<header>
+		    <a href="/">Home</a> | 
+		    <a href="/catalog">Catalogo</a> | 
+		    <span th:if="${#authorization.expression('isAuthenticated()')}">
+		        <a href="/profile">Profilo</a> |
+		        <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+		            <a href="/admin">Admin</a> |
+		        </span>
+		        <a href="/logout">Logout (<span th:text="${#authentication.name}">username</span>)</a>
+		    </span>
+		    <span th:if="${#authorization.expression('isAnonymous()')}">
+		        <a href="/login">Login</a> | 
+		        <a href="/register">Registrati</a>
+		    </span>
+		</header>
+
+    <main>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1>Crea il tuo account</h1>
+                
+                <!-- Messaggi di errore -->
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}">
+                    Errore durante la registrazione
+                </div>
+
+                <!-- Form di registrazione -->
+                <form th:action="@{/register}" method="post" th:object="${user}" class="auth-form">
+                    
+                    <!-- Nome -->
+                    <div class="form-group">
+                        <label for="firstName">Nome:</label>
+                        <input type="text" 
+                               id="firstName" 
+                               th:field="*{firstName}"
+                               placeholder="Inserisci il tuo nome"
+                               class="form-input"
+                               th:class="${#fields.hasErrors('firstName')} ? 'form-input error' : 'form-input'">
+                        <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="field-error">
+                            Errore nome
+                        </div>
+                    </div>
+
+                    <!-- Cognome -->
+                    <div class="form-group">
+                        <label for="lastName">Cognome:</label>
+                        <input type="text" 
+                               id="lastName" 
+                               th:field="*{lastName}"
+                               placeholder="Inserisci il tuo cognome"
+                               class="form-input"
+                               th:class="${#fields.hasErrors('lastName')} ? 'form-input error' : 'form-input'">
+                        <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="field-error">
+                            Errore cognome
+                        </div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" 
+                               id="username" 
+                               th:field="*{username}"
+                               placeholder="Scegli un username (min 3 caratteri)"
+                               class="form-input"
+                               th:class="${#fields.hasErrors('username')} ? 'form-input error' : 'form-input'">
+                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="field-error">
+                            Errore username
+                        </div>
+                        <div id="username-feedback" class="field-feedback"></div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" 
+                               id="email" 
+                               th:field="*{email}"
+                               placeholder="Inserisci la tua email"
+                               class="form-input"
+                               th:class="${#fields.hasErrors('email')} ? 'form-input error' : 'form-input'">
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error">
+                            Errore email
+                        </div>
+                        <div id="email-feedback" class="field-feedback"></div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" 
+                               id="password" 
+                               th:field="*{password}"
+                               placeholder="Inserisci password (min 6 caratteri)"
+                               class="form-input"
+                               th:class="${#fields.hasErrors('password')} ? 'form-input error' : 'form-input'">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="field-error">
+                            Errore password
+                        </div>
+                    </div>
+
+                    <!-- Conferma Password -->
+                    <div class="form-group">
+                        <label for="confirmPassword">Conferma Password:</label>
+                        <input type="password" 
+                               id="confirmPassword" 
+                               name="confirmPassword"
+                               placeholder="Ripeti la password"
+                               class="form-input">
+                        <div id="password-match-feedback" class="field-feedback"></div>
+                    </div>
+
+                    <!-- Pulsante Submit -->
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary full-width">
+                            Registrati
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Link per login -->
+                <div class="auth-footer">
+                    <p>Hai già un account?</p>
+                    <a href="/login" class="auth-link">Accedi qui</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript per validazione real-time -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            // Validazione username
+            let usernameTimeout;
+            usernameInput.addEventListener('input', function() {
+                clearTimeout(usernameTimeout);
+                const feedback = document.getElementById('username-feedback');
+                
+                if (this.value.length < 3) {
+                    feedback.textContent = '';
+                    return;
+                }
+                
+                usernameTimeout = setTimeout(() => {
+                    fetch(`/api/check-username?username=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(available => {
+                            if (available) {
+                                feedback.textContent = '✓ Username disponibile';
+                                feedback.className = 'field-feedback success';
+                            } else {
+                                feedback.textContent = '✗ Username già in uso';
+                                feedback.className = 'field-feedback error';
+                            }
+                        })
+                        .catch(() => {
+                            feedback.textContent = '';
+                        });
+                }, 500);
+            });
+            
+            // Validazione email
+            let emailTimeout;
+            emailInput.addEventListener('input', function() {
+                clearTimeout(emailTimeout);
+                const feedback = document.getElementById('email-feedback');
+                
+                if (!this.value.includes('@')) {
+                    feedback.textContent = '';
+                    return;
+                }
+                
+                emailTimeout = setTimeout(() => {
+                    fetch(`/api/check-email?email=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(available => {
+                            if (available) {
+                                feedback.textContent = '✓ Email disponibile';
+                                feedback.className = 'field-feedback success';
+                            } else {
+                                feedback.textContent = '✗ Email già in uso';
+                                feedback.className = 'field-feedback error';
+                            }
+                        })
+                        .catch(() => {
+                            feedback.textContent = '';
+                        });
+                }, 500);
+            });
+            
+            // Validazione conferma password
+            function checkPasswordMatch() {
+                const feedback = document.getElementById('password-match-feedback');
+                
+                if (passwordInput.value === '' || confirmPasswordInput.value === '') {
+                    feedback.textContent = '';
+                    return;
+                }
+                
+                if (passwordInput.value === confirmPasswordInput.value) {
+                    feedback.textContent = '✓ Le password corrispondono';
+                    feedback.className = 'field-feedback success';
+                } else {
+                    feedback.textContent = '✗ Le password non corrispondono';
+                    feedback.className = 'field-feedback error';
+                }
+            }
+            
+            passwordInput.addEventListener('input', checkPasswordMatch);
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<svg width="1200" height="400" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c7a7b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a9a9b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#68babb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="overlay" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGradient)"/>
+  
+  <!-- Abstract shapes for visual interest -->
+  <circle cx="150" cy="100" r="60" fill="#ffffff" opacity="0.1"/>
+  <circle cx="1050" cy="300" r="80" fill="#ffffff" opacity="0.15"/>
+  <circle cx="900" cy="80" r="40" fill="#ffffff" opacity="0.1"/>
+  
+  <!-- Geometric patterns -->
+  <polygon points="0,400 200,300 0,200" fill="#ffffff" opacity="0.05"/>
+  <polygon points="1200,0 1000,100 1200,200" fill="#ffffff" opacity="0.05"/>
+  
+  <!-- Product icons scattered -->
+  <g fill="#ffffff" opacity="0.2">
+    <!-- Shopping bag icon -->
+    <path d="M300 150 L320 150 L325 170 L295 170 Z M305 145 Q305 140 310 140 Q315 140 315 145"/>
+    <!-- Gift box icon -->
+    <rect x="800" y="200" width="20" height="20" rx="2"/>
+    <line x1="810" y1="200" x2="810" y2="220" stroke="#ffffff" stroke-width="2"/>
+    <line x1="800" y1="210" x2="820" y2="210" stroke="#ffffff" stroke-width="2"/>
+    <!-- Star icon -->
+    <path d="M500 250 L505 260 L515 260 L507 267 L510 277 L500 270 L490 277 L493 267 L485 260 L495 260 Z"/>
+  </g>
+  
+  <!-- Subtle texture overlay -->
+  <rect width="1200" height="400" fill="url(#overlay)"/>
+  
+  <!-- Light rays effect -->
+  <g opacity="0.1">
+    <path d="M0 400 L400 0 L450 0 L50 400 Z" fill="#ffffff"/>
+    <path d="M750 400 L1150 0 L1200 0 L800 400 Z" fill="#ffffff"/>
+  </g>
+</svg>

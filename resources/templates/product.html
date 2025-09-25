@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'ProdottoBello - ' + ${product?.name ?: 'Prodotto'}">ProdottoBello - Prodotto</title>
+    <link rel="stylesheet" th:href="@{/stile.css}">
+</head>
+<body>
+    <header>
+        <a href="/">Home</a> | 
+        <a href="/catalog">Catalogo</a> | 
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <a href="/profile">Profilo</a> |
+            <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a href="/admin">Admin</a> |
+            </span>
+            <a href="/logout">Logout (<span th:text="${#authentication.name}">username</span>)</a>
+        </span>
+        <span th:if="${#authorization.expression('isAnonymous()')}">
+            <a href="/login">Login</a> | 
+            <a href="/register">Registrati</a>
+        </span>
+    </header>
+
+    <main>
+        <div class="breadcrumb">
+            <a href="/">Home</a> &gt; 
+            <span th:text="${product?.type ?: 'Categoria'}">Categoria</span> &gt; 
+            <span th:text="${product?.name ?: 'Prodotto'}">Prodotto</span>
+        </div>
+
+        <div th:if="${product != null}" class="product-detail">
+            <h1 th:text="${product.name}">Nome Prodotto</h1>
+            
+            <div class="product-info">
+                <div class="product-main-info">
+                    <div class="product-category">
+                        <strong>Categoria:</strong>
+                        <span class="category-badge" th:text="${product.type}">BOOKS</span>
+                    </div>
+                    
+                    <div class="product-price-section">
+                        <span class="price-label">Prezzo:</span>
+                        <span class="price-value" th:text="'€ ' + ${product.price}">€: 29.90</span>
+                    </div>
+                    
+                    <div class="product-description">
+                        <h3>Descrizione</h3>
+                        <p th:text="${product.description}">Descrizione del prodotto...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-comments">
+                <h3>Recensioni</h3>
+
+                <!-- Lista commenti -->
+                <div th:if="${comments != null}">
+                    <div th:each="comment : ${comments}" class="comment-box">
+                        <p>
+                            <strong th:text="${comment.user.username}">Utente</strong>:
+                            <span th:text="${comment.content}">Contenuto del commento</span>
+                        </p>
+
+                        <!-- Se l'utente autenticato è l'autore, può modificare/eliminare -->
+                        <div th:if="${#authentication.name == comment.user.username}">
+                            <form th:action="@{/comments/update/{commentId}(commentId=${comment.id})}" method="post">
+                                <input type="hidden" name="productId" th:value="${product.id}" />
+                                <textarea name="content" th:text="${comment.content}" required></textarea>
+                                <button type="submit">Modifica</button>
+                            </form>
+
+                            <form th:action="@{/comments/delete/{commentId}(commentId=${comment.id})}" method="post">
+                                <input type="hidden" name="productId" th:value="${product.id}" />
+                                <button type="submit">Elimina</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+				<!-- Solo utenti con ruolo USER possono scrivere -->
+				<div th:if="${#authorization.expression('isAuthenticated() and hasRole(''USER'')')}">
+				    <form th:action="@{/comments/add/{productId}(productId=${product.id})}" method="post">
+				        <textarea name="content" placeholder="Scrivi una recensione..." required></textarea>
+				        <button type="submit">Invia</button>
+				    </form>
+				</div>
+
+				<!-- Gli admin vedono un messaggio -->
+				<div th:if="${#authorization.expression('isAuthenticated() and hasRole(''ADMIN'')')}">
+				    <p>Gli amministratori possono solo visualizzare le recensioni degli utenti.</p>
+				</div>
+
+
+                <div th:if="${#authorization.expression('isAnonymous()')}">
+                    <p><a href="/login">Accedi</a> per lasciare una recensione.</p>
+                </div>
+            </div>
+
+            <div th:if="${product.similarProducts != null and !product.similarProducts.empty}" class="similar-products">
+                <h3>Prodotti Simili</h3>
+                <div class="similar-products-list">
+                    <div class="similar-product" th:each="similar : ${product.similarProducts}">
+                        <h4>
+                            <a th:href="@{/product/{id}(id=${similar.id})}" th:text="${similar.name}">Nome Prodotto Simile</a>
+                        </h4>
+                        <p class="similar-price" th:text="'€ ' + ${similar.price}">€: 99.90</p>
+                        <p class="similar-description" th:text="${#strings.abbreviate(similar.description, 80)}">Descrizione breve...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${product == null}" class="product-not-found">
+            <h1>Prodotto non trovato</h1>
+            <p>Il prodotto richiesto non è disponibile.</p>
+            <a href="/" class="back-home">Torna alla home</a>
+        </div>
+    </main>
+</body>
+</html>

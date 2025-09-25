@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdottoBello - Accesso Negato</title>
+    <link rel="stylesheet" th:href="@{/stile.css}">
+</head>
+<body>
+    <header>
+        <a href="/">Home</a> | 
+        <a href="/catalog">Catalogo</a> | 
+        <span sec:authorize="isAuthenticated()">
+            <a href="/profile">Profilo</a> |
+            <span sec:authorize="hasRole('ADMIN')">
+                <a href="/admin">Admin</a> |
+            </span>
+            <a href="/logout">Logout (<span sec:authentication="name">username</span>)</a>
+        </span>
+        <span sec:authorize="isAnonymous()">
+            <a href="/login">Login</a> | 
+            <a href="/register">Registrati</a>
+        </span>
+    </header>
+
+    <main>
+        <div class="error-container">
+            <div class="error-card">
+                <div class="error-icon">🚫</div>
+                <h1>Accesso Negato</h1>
+                <p class="error-message">
+                    Non hai i permessi necessari per accedere a questa pagina.
+                </p>
+                
+                <div class="error-details">
+                    <div sec:authorize="isAnonymous()">
+                        <p>Sembra che tu non sia autenticato.</p>
+                        <div class="error-actions">
+                            <a href="/login" class="btn-primary">Accedi</a>
+                            <a href="/register" class="btn-secondary">Registrati</a>
+                        </div>
+                    </div>
+                    
+                    <div sec:authorize="hasRole('USER')">
+                        <p>Questa sezione è riservata agli amministratori.</p>
+                        <div class="error-actions">
+                            <a href="/profile" class="btn-primary">Il Mio Profilo</a>
+                            <a href="/catalog" class="btn-secondary">Sfoglia Catalogo</a>
+                        </div>
+                    </div>
+                    
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <p>Si è verificato un errore di autorizzazione.</p>
+                        <div class="error-actions">
+                            <a href="/admin" class="btn-primary">Area Admin</a>
+                            <a href="/profile" class="btn-secondary">Il Mio Profilo</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="error-footer">
+                    <a href="/" class="back-home">← Torna alla Home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

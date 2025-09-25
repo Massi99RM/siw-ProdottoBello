@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdottoBello - Home</title>
+    <link rel="stylesheet" th:href="@{/stile.css}">
+</head>
+<body>
+	<header>
+	    <a href="/">Home</a> | 
+	    <a href="/catalog">Catalogo</a> | 
+	    <span th:if="${#authorization.expression('isAuthenticated()')}">
+	        <a href="/profile">Profilo</a> |
+	        <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+	            <a href="/admin">Admin</a> |
+	        </span>
+	        <a href="/logout">Logout (<span th:text="${#authentication.name}">username</span>)</a>
+	    </span>
+	    <span th:if="${#authorization.expression('isAnonymous()')}">
+	        <a href="/login">Login</a> | 
+	        <a href="/register">Registrati</a>
+	    </span>
+	</header>
+
+    <main>
+        <h1>Benvenuto su ProdottoBello</h1>
+        <p>Scopri i nostri prodotti selezionati per te!</p>
+
+        <div class="products-grid" th:if="${products != null and !products.empty}">
+            <h2>I nostri prodotti</h2>
+            <div class="product-list">
+                <div class="product-card" th:each="product : ${products}">
+                    <h3>
+                        <a th:href="@{/product/{id}(id=${product.id})}" th:text="${product.name}">Nome Prodotto</a>
+                    </h3>
+                    <p class="product-type" th:text="${product.type}">Categoria</p>
+                    <p class="product-price" th:text="'€ ' + ${product.price}">Prezzo</p>
+                    <p class="product-description" th:text="${#strings.abbreviate(product.description, 100)}">Descrizione breve...</p>
+                    <a th:href="@{/product/{id}(id=${product.id})}" class="view-details">Vedi dettagli</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${products == null or products.empty}" class="no-products">
+            <p>Nessun prodotto disponibile al momento.</p>
+        </div>
+    </main>
+</body>
+</html>

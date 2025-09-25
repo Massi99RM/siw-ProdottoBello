@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdottoBello - Login</title>
+    <link rel="stylesheet" th:href="@{/stile.css}">
+</head>
+<body>
+	<header>
+		    <a href="/">Home</a> | 
+		    <a href="/catalog">Catalogo</a> | 
+		    <span th:if="${#authorization.expression('isAuthenticated()')}">
+		        <a href="/profile">Profilo</a> |
+		        <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+		            <a href="/admin">Admin</a> |
+		        </span>
+		        <a href="/logout">Logout (<span th:text="${#authentication.name}">username</span>)</a>
+		    </span>
+		    <span th:if="${#authorization.expression('isAnonymous()')}">
+		        <a href="/login">Login</a> | 
+		        <a href="/register">Registrati</a>
+		    </span>
+		</header>>
+
+    <main>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1>Accedi al tuo account</h1>
+                
+                <!-- Messaggi di errore/successo -->
+                <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}">
+                    Errore di login
+                </div>
+                
+                <div th:if="${logoutMessage}" class="alert alert-success" th:text="${logoutMessage}">
+                    Logout effettuato
+                </div>
+                
+                <div th:if="${param.logout}" class="alert alert-success">
+                    Logout effettuato con successo!
+                </div>
+
+                <!-- Form di login -->
+                <form action="/perform_login" method="post" class="auth-form">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="form-group">
+                        <label for="username">Username o Email:</label>
+                        <input type="text" 
+                               id="username" 
+                               name="username" 
+                               required 
+                               placeholder="Inserisci username o email"
+                               class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               required 
+                               placeholder="Inserisci password"
+                               class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary full-width">
+                            Accedi
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Link per registrazione -->
+                <div class="auth-footer">
+                    <p>Non hai ancora un account?</p>
+                    <a href="/register" class="auth-link">Registrati qui</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
